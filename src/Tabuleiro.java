@@ -115,6 +115,8 @@ public class Tabuleiro extends JPanel {
         switch (elem) {
             case ' ':
                 return new Fundo("Fundo", lin, col, this);
+            case 'i':
+                return new Ice("gelo", lin, col, this);
             case '-':
                 return new Wall("Dica", lin, col, this);
             case '^':
@@ -123,7 +125,7 @@ public class Tabuleiro extends JPanel {
                 return new TBD("Final", "final_tile.png", lin, col, this);
             case '*': {
                 ElementoBasico anterior = new Fundo("Fundo", lin, col, this);
-                principal = new Personagem("Mutley", "puffle_player.png", lin, col, this);
+                principal = new Personagem("Puffle", "puffle_player.png", lin, col, this);
                 principal.setAnterior(anterior);
                 return principal;
             }

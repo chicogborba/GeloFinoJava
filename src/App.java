@@ -74,6 +74,7 @@ public class App extends JFrame implements ActionListener {
         // Coloca a tela com o menor tamanho possivel se baseando no tamanho fixo dos
         // componentes
         this.pack();
+        this.setResizable(false);
 
         this.setTitle("Gelo fino");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);

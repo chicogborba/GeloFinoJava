@@ -1,4 +1,4 @@
-
+import java.util.function.Function;
 
 public class Personagem extends ElementoBasico {
     private ElementoBasico anterior;
@@ -7,28 +7,24 @@ public class Personagem extends ElementoBasico {
         super(id, iconPath, linInicial, colInicial, tabuleiro);
     }
 
-    public void setAnterior(ElementoBasico anterior){
+    public void setAnterior(ElementoBasico anterior) {
         this.anterior = anterior;
     }
 
     public ElementoBasico getAnterior() {
         return anterior;
     }
-    
+
     public void moveDireita() {
         // Remove o Personagem da posicao atual e avança
         getTabuleiro().insereElemento(anterior);
         this.incCol();
         // Verifica se tem algum elemento de interesse na nova posicao
         // e interage de acordo
-        ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
-        if (!(elemento instanceof Fundo)) {
-            elemento.acao(this);
+        movePlayer((Void) -> {
             this.decCol();
-            this.anterior = getTabuleiro().insereElemento(this);
-        } else {
-            this.anterior = getTabuleiro().insereElemento(this);
-        }
+            return null;
+        });
     }
 
     public void moveEsquerda() {
@@ -37,14 +33,10 @@ public class Personagem extends ElementoBasico {
         this.decCol();
         // Verifica se tem algum elemento de interesse na nova posicao
         // e interage de acordo
-        ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
-        if (!(elemento instanceof Fundo)) {
-            elemento.acao(this);
+        movePlayer((Void) -> {
             this.incCol();
-            this.anterior = getTabuleiro().insereElemento(this);
-        } else {
-            this.anterior = getTabuleiro().insereElemento(this);
-        }
+            return null;
+        });
     }
 
     public void moveCima() {
@@ -53,14 +45,10 @@ public class Personagem extends ElementoBasico {
         this.decLin();
         // Verifica se tem algum elemento de interesse na nova posicao
         // e interage de acordo
-        ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
-        if (!(elemento instanceof Fundo)) {
-            elemento.acao(this);
+        movePlayer((Void) -> {
             this.incLin();
-            this.anterior = getTabuleiro().insereElemento(this);
-        } else {
-            this.anterior = getTabuleiro().insereElemento(this);
-        }
+            return null;
+        });
     }
 
     public void moveBaixo() {
@@ -69,10 +57,23 @@ public class Personagem extends ElementoBasico {
         this.incLin();
         // Verifica se tem algum elemento de interesse na nova posicao
         // e interage de acordo
-        ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
-        if (!(elemento instanceof Fundo)) {
-            elemento.acao(this);
+        movePlayer((Void) -> {
             this.decLin();
+            return null;
+        });
+    }
+
+    // make method recive another method
+    private void movePlayer(Function<Void, Void> moveFunction) {
+        // Verifica se tem algum elemento de interesse na nova posicao
+        // e interage de acordo
+        ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
+        if (!(elemento instanceof Fundo) && !(elemento instanceof Ice)) {
+            elemento.acao(this);
+            moveFunction.apply(null);
+            this.anterior = getTabuleiro().insereElemento(this);
+        } else if (elemento instanceof Ice) {
+            elemento.acao(this);
             this.anterior = getTabuleiro().insereElemento(this);
         } else {
             this.anterior = getTabuleiro().insereElemento(this);
@@ -84,5 +85,4 @@ public class Personagem extends ElementoBasico {
         throw new UnsupportedOperationException("Unimplemented method 'acao'");
     }
 
-   
 }
