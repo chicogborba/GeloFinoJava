@@ -18,6 +18,7 @@ import java.io.File;
 public class App extends JFrame implements ActionListener {
     private Tabuleiro tabuleiro;
     private Personagem personagem;
+    private int level = 1;
 
     public App() {
         super();
@@ -71,7 +72,7 @@ public class App extends JFrame implements ActionListener {
         painelGeral.add(botoesDirecaoVerticalLast);
 
         // Insere os personagens no tabuleiro
-        loadGame(1);
+        loadGame(level);
 
         // Exibe a janela
         this.add(painelGeral);
@@ -112,6 +113,9 @@ public class App extends JFrame implements ActionListener {
 
             // Open the audioInputStream and start playing the clip
             clip.open(audioInputStream);
+            // Set the loop count to infinite
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+
             clip.start();
 
             // Add a LineListener to be notified when the clip finishes playing
@@ -133,7 +137,8 @@ public class App extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (tabuleiro.isLevelComplete()) {
-            loadGame(2);
+            level++;
+            loadGame(level);
         }
         String cmd = e.getActionCommand();
         if (cmd.equals("→")) {
