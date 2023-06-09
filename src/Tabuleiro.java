@@ -11,6 +11,7 @@ import java.util.Random;
 public class Tabuleiro extends JPanel {
     private static final int MAXLIN = 15;
     private static final int MAXCOL = 19;
+    private boolean isLevelComplete = false;
     private ElementoBasico[][] celulas;
 
     private Personagem principal;
@@ -110,6 +111,27 @@ public class Tabuleiro extends JPanel {
         }
     }
 
+    public void reset() {
+        this.isLevelComplete = false;
+        this.removeAll();
+        this.revalidate();
+        this.repaint();
+        for (int i = 0; i < MAXLIN; i++) {
+            for (int j = 0; j < MAXCOL; j++) {
+                celulas[i][j] = new Fundo("Fundo[" + i + "][" + j + "]", i, j, this);
+                this.add(celulas[i][j]);
+            }
+        }
+    }
+
+    public void completeLevel() {
+        this.isLevelComplete = true;
+    }
+
+    public boolean isLevelComplete() {
+        return isLevelComplete;
+    }
+
     public ElementoBasico getElem(char elem, int lin, int col) {
         Random r = new Random();
         switch (elem) {
@@ -122,7 +144,7 @@ public class Tabuleiro extends JPanel {
             case '^':
                 return new TBD("Buraco", "hole.jpg", lin, col, this);
             case '+':
-                return new TBD("Final", "final_tile.png", lin, col, this);
+                return new FinalTile("Final", "final_tile.png", lin, col, this);
             case '*': {
                 ElementoBasico anterior = new Fundo("Fundo", lin, col, this);
                 principal = new Personagem("Puffle", "puffle_player.png", lin, col, this);

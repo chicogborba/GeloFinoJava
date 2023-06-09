@@ -4,9 +4,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class App extends JFrame implements ActionListener {
     private Tabuleiro tabuleiro;
@@ -64,9 +71,7 @@ public class App extends JFrame implements ActionListener {
         painelGeral.add(botoesDirecaoVerticalLast);
 
         // Insere os personagens no tabuleiro
-        tabuleiro.loadLevel(2);
-        personagem = tabuleiro.getPrincipal();
-        personagem.setAnterior(personagem.getAnterior());
+        loadGame(1);
 
         // Exibe a janela
         this.add(painelGeral);
@@ -79,7 +84,16 @@ public class App extends JFrame implements ActionListener {
         this.setTitle("Gelo fino");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
+        playSong("src/sounds/main_music.wav");
         tabuleiro.atualizaVisualizacao();
+    }
+
+    public void loadGame(int level) {
+        tabuleiro.reset();
+        tabuleiro.loadLevel(level);
+        personagem = tabuleiro.getPrincipal();
+        personagem.setAnterior(personagem.getAnterior());
+
     }
 
     public static void main(String[] args) {
@@ -91,9 +105,36 @@ public class App extends JFrame implements ActionListener {
         });
     }
 
+    private void playSong(String filePath) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
+            Clip clip = AudioSystem.getClip();
+
+            // Open the audioInputStream and start playing the clip
+            clip.open(audioInputStream);
+            clip.start();
+
+            // Add a LineListener to be notified when the clip finishes playing
+            clip.addLineListener(new LineListener() {
+                @Override
+                public void update(LineEvent event) {
+                    if (event.getType() == LineEvent.Type.STOP) {
+                        // Handle clip completion if needed
+                    }
+                }
+            });
+        } catch (Exception e) {
+            // Handle any exceptions
+            e.printStackTrace();
+        }
+    }
+
     // Movimentação do personagem usando os botões de setas
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (tabuleiro.isLevelComplete()) {
+            loadGame(2);
+        }
         String cmd = e.getActionCommand();
         if (cmd.equals("→")) {
             personagem.moveDireita();
