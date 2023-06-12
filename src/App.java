@@ -1,15 +1,11 @@
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,78 +13,72 @@ import java.io.File;
 
 public class App extends JFrame implements ActionListener {
     private Tabuleiro tabuleiro;
+    private MainMenu mainMenu;
     private Personagem personagem;
     private int level = 1;
+    private int score = 0;
+    private int maxLevel = 3;
 
     public App() {
         super();
         tabuleiro = new Tabuleiro();
 
-        // Criação de multiplos paineis para organizar os botões em formato de cruz
-        JPanel botoesDirecaoVerticalFirst = new JPanel();
-        JPanel botoesDirecaoVerticalLast = new JPanel();
-        botoesDirecaoVerticalFirst.setLayout(new BoxLayout(botoesDirecaoVerticalFirst, BoxLayout.Y_AXIS));
-        botoesDirecaoVerticalLast.setLayout(new BoxLayout(botoesDirecaoVerticalLast, BoxLayout.Y_AXIS));
-        JPanel botoesDirecaoHorizontal = new JPanel(new FlowLayout());
+        // ---------------
+        // LAYOUT DA TELA
+        // ---------------
 
-        // Tirando a borda dos botões de moimentação
-        botoesDirecaoVerticalFirst.setBorder(null);
-        botoesDirecaoVerticalLast.setBorder(null);
-        botoesDirecaoHorizontal.setBorder(null);
+        // Cria os botões de movimento e adiciona o action listener
+        MoveButtons moveButtons = new MoveButtons();
+        moveButtons.createButtons(this);
 
-        // Botões de direção esquerda e direita
-        JButton butDir = new JButton("→");
-        butDir.addActionListener(this);
-        JButton butEsq = new JButton("←");
-        butEsq.addActionListener(this);
+        // Cria o painel do jogo onde ficara o tabuleiro e os botões de movimento
+        JPanel painelJogo = new JPanel();
+        painelJogo.setBackground(new Color(217, 241, 255));
+        painelJogo.setLayout(new BoxLayout(painelJogo, BoxLayout.PAGE_AXIS));
+        painelJogo.add(tabuleiro);
+        painelJogo.add(moveButtons);
 
-        // Botão para cima e para baixo com alinhamento centralizado
-        JButton butCima = new JButton("↑");
-        butCima.setAlignmentX(JButton.CENTER_ALIGNMENT);
-        butCima.addActionListener(this);
-        JButton butBaixo = new JButton("↓");
-        butBaixo.setAlignmentX(JButton.CENTER_ALIGNMENT);
-        butBaixo.addActionListener(this);
-
-        // Adicionando os botões na sua respectiva ordem no painel
-        botoesDirecaoVerticalFirst.add(butCima);
-        botoesDirecaoHorizontal.add(butEsq);
-        botoesDirecaoHorizontal.add(butDir);
-        botoesDirecaoVerticalLast.add(butBaixo);
-
-        // Definido a cor do fundo do painel onde os botões estão
-        botoesDirecaoVerticalFirst.setBackground(new Color(118, 187, 254));
-        botoesDirecaoVerticalLast.setBackground(new Color(118, 187, 254));
-        botoesDirecaoHorizontal.setBackground(new Color(118, 187, 254));
-
-        JPanel painelGeral = new JPanel();
-        // Definindo a cor do fundo do painel geral
-        painelGeral.setBackground(new Color(118, 187, 254));
-
-        painelGeral.setLayout(new BoxLayout(painelGeral, BoxLayout.PAGE_AXIS));
-        painelGeral.add(tabuleiro);
-        painelGeral.add(botoesDirecaoVerticalFirst);
-        painelGeral.add(botoesDirecaoHorizontal);
-        painelGeral.add(botoesDirecaoVerticalLast);
-
-        // Insere os personagens no tabuleiro
+        // Carrega o jogo pela primeira vez com o atributo level
         loadGame(level);
 
-        // Exibe a janela
-        this.add(painelGeral);
+        // Cria o menu principal e o deixa visível
+        // enquanto o jogo fica invisível até o botão de iniciar ser clicado
+        this.setLayout(new BorderLayout());
+        mainMenu = new MainMenu(painelJogo);
+        painelJogo.setVisible(false);
+        mainMenu.setVisible(true);
+        this.add(painelJogo, BorderLayout.CENTER);
+        this.add(mainMenu, BorderLayout.NORTH);
+        mainMenu.getStartButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Quando o botão de iniciar for clicado, o menu some e o jogo aparece
+                mainMenu.setVisible(false);
+                painelJogo.setVisible(true);
+                tabuleiro.atualizaVisualizacao();
+                // Deixa o app com o menor tamanho possível para evitar as
+                // bordas brancas dos botões
+                App.this.pack();
+            }
+        });
 
-        // Coloca a tela com o menor tamanho possivel se baseando no tamanho fixo dos
-        // componentes
-        this.pack();
+        // Colocando um tamanho fixo inicial para a tela para que o menu fique do
+        // mesmo tamanho que o tabuleiro
+        this.setSize(950, 725);
         this.setResizable(false);
 
+        // Exibe a tela
         this.setTitle("Gelo fino");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
+
+        // Utiliza a função playSong para tocar a música de fundo
+        // Em loop infinito
         playSong("src/sounds/main_music.wav");
         tabuleiro.atualizaVisualizacao();
     }
 
+    // Limpa o tabuleiro e carrega o level passado como parâmetro
     public void loadGame(int level) {
         tabuleiro.reset();
         tabuleiro.loadLevel(level);
@@ -106,6 +96,42 @@ public class App extends JFrame implements ActionListener {
         });
     }
 
+    // ------------------------------
+    // TRATAMENTO DE EVENTOS (INPUT)
+    // ------------------------------
+    // Movimentação do personagem usando os botões de setas
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+        if (cmd.equals("→")) {
+            personagem.moveDireita();
+        } else if (cmd.equals("←")) {
+            personagem.moveEsquerda();
+        } else if (cmd.equals("↑")) {
+            personagem.moveCima();
+        } else if (cmd.equals("↓")) {
+            personagem.moveBaixo();
+        }
+
+        // Verifica se o level foi completado
+        // Se sim, carrega o próximo level
+        // Se for o último level, exibe uma mensagem de vitória
+        if (tabuleiro.isLevelComplete()) {
+            if (level < maxLevel) {
+                level++;
+                loadGame(level);
+            } else {
+                JOptionPane.showMessageDialog(null, "Parabéns, você venceu o jogo!");
+                System.exit(0);
+            }
+        }
+        tabuleiro.atualizaVisualizacao();
+    }
+
+    // ----------------
+    // MUSICA DE FUNDO
+    // ----------------
+    // Função para tocar musica de fundo
     private void playSong(String filePath) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
@@ -118,38 +144,9 @@ public class App extends JFrame implements ActionListener {
 
             clip.start();
 
-            // Add a LineListener to be notified when the clip finishes playing
-            clip.addLineListener(new LineListener() {
-                @Override
-                public void update(LineEvent event) {
-                    if (event.getType() == LineEvent.Type.STOP) {
-                        // Handle clip completion if needed
-                    }
-                }
-            });
         } catch (Exception e) {
             // Handle any exceptions
             e.printStackTrace();
         }
-    }
-
-    // Movimentação do personagem usando os botões de setas
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (tabuleiro.isLevelComplete()) {
-            level++;
-            loadGame(level);
-        }
-        String cmd = e.getActionCommand();
-        if (cmd.equals("→")) {
-            personagem.moveDireita();
-        } else if (cmd.equals("←")) {
-            personagem.moveEsquerda();
-        } else if (cmd.equals("↑")) {
-            personagem.moveCima();
-        } else if (cmd.equals("↓")) {
-            personagem.moveBaixo();
-        }
-        tabuleiro.atualizaVisualizacao();
     }
 }

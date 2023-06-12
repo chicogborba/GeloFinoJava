@@ -141,8 +141,6 @@ public class Tabuleiro extends JPanel {
                 return new Ice("gelo", lin, col, this);
             case '-':
                 return new Wall("Dica", lin, col, this);
-            case '^':
-                return new TBD("Buraco", "hole.jpg", lin, col, this);
             case '+':
                 return new FinalTile("Final", "final_tile.png", lin, col, this);
             case '*': {
