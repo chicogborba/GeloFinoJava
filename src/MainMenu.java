@@ -10,12 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class MainMenu extends JPanel {
-  private JPanel gamePanel;
   private JButton startButton = new JButton();
 
-  public MainMenu(JPanel gamePanel) {
+  public MainMenu() {
     super();
-    this.gamePanel = gamePanel;
     initializeUI();
   }
 
@@ -25,7 +23,6 @@ public class MainMenu extends JPanel {
 
   private void initializeUI() {
     this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-    this.setPreferredSize(new Dimension(950, 725));
 
     // Adicionando imagem de fundo do menu principal
     try {
@@ -40,7 +37,7 @@ public class MainMenu extends JPanel {
           g.drawImage(logo, x, y, null);
         }
       };
-      logoPanel.setPreferredSize(new Dimension(630, 567));
+      logoPanel.setPreferredSize(new Dimension(730, 667));
       this.add(logoPanel);
       logoPanel.setBackground(new Color(217, 241, 255));
       logoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0)); // Alinhamento centralizado

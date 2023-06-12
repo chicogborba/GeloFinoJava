@@ -44,7 +44,7 @@ public class App extends JFrame implements ActionListener {
         // Cria o menu principal e o deixa visível
         // enquanto o jogo fica invisível até o botão de iniciar ser clicado
         this.setLayout(new BorderLayout());
-        mainMenu = new MainMenu(painelJogo);
+        mainMenu = new MainMenu();
         painelJogo.setVisible(false);
         mainMenu.setVisible(true);
         this.add(painelJogo, BorderLayout.CENTER);
@@ -59,17 +59,20 @@ public class App extends JFrame implements ActionListener {
                 // Deixa o app com o menor tamanho possível para evitar as
                 // bordas brancas dos botões
                 App.this.pack();
+                // print app width and height
             }
         });
 
         // Colocando um tamanho fixo inicial para a tela para que o menu fique do
         // mesmo tamanho que o tabuleiro
-        this.setSize(950, 725);
+        this.setSize(855, 800);
         this.setResizable(false);
 
         // Exibe a tela
         this.setTitle("Gelo fino");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.getContentPane().setBackground(new Color(217, 241, 255));
         this.setVisible(true);
 
         // Utiliza a função playSong para tocar a música de fundo
