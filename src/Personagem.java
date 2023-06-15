@@ -68,14 +68,22 @@ public class Personagem extends ElementoBasico {
         // Verifica se tem algum elemento de interesse na nova posicao
         // e interage de acordo
         ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
-        if (!(elemento instanceof Fundo) && !(elemento instanceof Ice)) {
+        if (!(elemento instanceof Fundo) && !(elemento instanceof Ice)&& !(elemento instanceof HardIce) && !(elemento instanceof Coin))  {
             elemento.acao(this);
             moveFunction.apply(null);
             this.anterior = getTabuleiro().insereElemento(this);
         } else if (elemento instanceof Ice) {
             elemento.acao(this);
             this.anterior = getTabuleiro().insereElemento(this);
-        } else {
+        } else if (elemento instanceof HardIce) {
+            elemento.acao(this);
+            this.anterior = getTabuleiro().insereElemento(this);
+        }
+        else if (elemento instanceof Coin) {
+            elemento.acao(this);
+            this.anterior = getTabuleiro().insereElemento(this);
+        }
+        else {
             this.anterior = getTabuleiro().insereElemento(this);
         }
     }

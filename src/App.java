@@ -17,7 +17,7 @@ public class App extends JFrame implements ActionListener {
     private Personagem personagem;
     private int level = 1;
     private int score = 0;
-    private int maxLevel = 3;
+    private int maxLevel = 4;
 
     public App() {
         super();

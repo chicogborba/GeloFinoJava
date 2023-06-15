@@ -141,14 +141,19 @@ public class Tabuleiro extends JPanel {
                 return new Ice("Gelo", lin, col, this);
             case '-':
                 return new Wall("Parede", lin, col, this);
+            case  '!': 
+                return new HardIce("GeloDuro", lin, col, this);
             case '+':
                 return new FinalTile("Final", "final_tile.png", lin, col, this);
+            case 'f': 
+                return new  Coin("Moeda", lin, col, this);
             case '*': {
                 ElementoBasico anterior = new Fundo("Fundo", lin, col, this);
                 principal = new Personagem("Puffle", "puffle_player.png", lin, col, this);
                 principal.setAnterior(anterior);
                 return principal;
             }
+          
             default:
                 throw new IllegalArgumentException("Personagem invalido: " + elem);
         }
