@@ -144,7 +144,7 @@ public class Tabuleiro extends JPanel {
             case  '!': 
                 return new HardIce("GeloDuro", lin, col, this);
             case '+':
-                return new FinalTile("Final", "final_tile.png", lin, col, this);
+                return new FinalTile("Final", "FinalTile.jpeg", lin, col, this);
             case 'f': 
                 return new  Coin("Moeda", lin, col, this);
              case 'k': 
@@ -153,7 +153,7 @@ public class Tabuleiro extends JPanel {
                 return new  Padlock("Cadeado", lin, col, this);
             case '*': {
                 ElementoBasico anterior = new Fundo("Fundo", lin, col, this);
-                principal = new Personagem("Puffle", "puffle_player.png", lin, col, this);
+                principal = new Personagem("Puffle", "Personagem.jpeg", lin, col, this);
                 principal.setAnterior(anterior);
                 return principal;
             }
