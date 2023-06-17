@@ -147,6 +147,10 @@ public class Tabuleiro extends JPanel {
                 return new FinalTile("Final", "final_tile.png", lin, col, this);
             case 'f': 
                 return new  Coin("Moeda", lin, col, this);
+             case 'k': 
+                return new  Key("Chave", lin, col, this);
+            case 'p': 
+                return new  Padlock("Cadeado", lin, col, this);
             case '*': {
                 ElementoBasico anterior = new Fundo("Fundo", lin, col, this);
                 principal = new Personagem("Puffle", "puffle_player.png", lin, col, this);
