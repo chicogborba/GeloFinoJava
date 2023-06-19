@@ -37,7 +37,8 @@ public class App extends JFrame implements ActionListener {
 
         // Header para mostrar o level e o score
         JPanel header = new JPanel();
-        header.setBackground(new Color(217, 241, 255));
+        // 221, 225, 236
+        header.setBackground(new Color(221, 225, 236));
         header.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS)); // Usando BoxLayout com orientação horizontal
         header.setPreferredSize(new Dimension(855, 50));
@@ -141,7 +142,7 @@ public class App extends JFrame implements ActionListener {
         this.setTitle("Gelo fino");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.getContentPane().setBackground(new Color(217, 241, 255));
+        this.getContentPane().setBackground(new Color(221, 225, 236));
         this.setVisible(true);
 
         // Utiliza a função playSong para tocar a música de fundo

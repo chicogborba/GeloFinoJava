@@ -41,7 +41,7 @@ public class MainMenu extends JPanel {
       };
       logoPanel.setPreferredSize(new Dimension(630, 567));
       this.add(logoPanel);
-      logoPanel.setBackground(new Color(217, 241, 255));
+      logoPanel.setBackground(new Color(221, 225, 236));
       logoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0)); // Alinhamento centralizado
     } catch (IOException e) {
       e.printStackTrace();
@@ -49,7 +49,7 @@ public class MainMenu extends JPanel {
 
     // Adiciona o botão de iniciar
     JPanel buttonPanel = new JPanel();
-    buttonPanel.setBackground(new Color(217, 241, 255));
+    buttonPanel.setBackground(new Color(221, 225, 236));
     try {
       Image startButtonImg = ImageIO.read(App.class.getResource("imagens/start_button.png"));
       startButton.setIcon(new javax.swing.ImageIcon(startButtonImg));

@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class Tabuleiro extends JPanel {
     private static final int MAXLIN = 15;
@@ -21,7 +20,7 @@ public class Tabuleiro extends JPanel {
 
     public Tabuleiro() {
         super();
-        this.setBackground(new Color(217, 241, 255));
+        this.setBackground(new Color(221, 225, 236));
         // Cria o conjunto de células vazia e as insere no layout
         celulas = new ElementoBasico[MAXLIN][MAXCOL];
         this.setLayout(new GridLayout(MAXLIN, MAXCOL));
@@ -153,7 +152,6 @@ public class Tabuleiro extends JPanel {
     }
 
     public ElementoBasico getElem(char elem, int lin, int col) {
-        Random r = new Random();
         switch (elem) {
             case ' ':
                 return new Fundo("Fundo", lin, col, this);
