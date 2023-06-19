@@ -1,8 +1,11 @@
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -16,8 +19,10 @@ public class App extends JFrame implements ActionListener {
     private MainMenu mainMenu;
     private Personagem personagem;
     private int level = 1;
-    private int score = 0;
-    private int maxLevel = 3;
+    private JLabel levelLabel = new JLabel("Level: " + level);
+    private JLabel scoreLabel = new JLabel("Score: 0");
+    private static int score = 0;
+    private int maxLevel = 6;
 
     public App() {
         super();
@@ -27,6 +32,27 @@ public class App extends JFrame implements ActionListener {
         // LAYOUT DA TELA
         // ---------------
 
+        // Header para mostrar o level e o score
+        JPanel header = new JPanel();
+        header.setBackground(new Color(217, 241, 255));
+        header.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS)); // Usando BoxLayout com orientação horizontal
+        header.setPreferredSize(new Dimension(855, 50));
+
+        // Adicionando espaçamento interno nas laterais
+        int padding = 15;
+        header.setBorder(new EmptyBorder(padding, padding, padding, padding));
+
+        levelLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        levelLabel.setForeground(new Color(0, 0, 0));
+        header.add(levelLabel);
+
+        header.add(Box.createHorizontalGlue());
+
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        scoreLabel.setForeground(new Color(0, 0, 0));
+        header.add(scoreLabel);
+
         // Cria os botões de movimento e adiciona o action listener
         MoveButtons moveButtons = new MoveButtons();
         moveButtons.createButtons(this);
@@ -35,6 +61,7 @@ public class App extends JFrame implements ActionListener {
         JPanel painelJogo = new JPanel();
         painelJogo.setBackground(new Color(217, 241, 255));
         painelJogo.setLayout(new BoxLayout(painelJogo, BoxLayout.PAGE_AXIS));
+        painelJogo.add(header);
         painelJogo.add(tabuleiro);
         painelJogo.add(moveButtons);
 
@@ -105,6 +132,7 @@ public class App extends JFrame implements ActionListener {
     // Movimentação do personagem usando os botões de setas
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Verifica qual botão foi clicado
         String cmd = e.getActionCommand();
         if (cmd.equals("→")) {
             personagem.moveDireita();
@@ -123,12 +151,15 @@ public class App extends JFrame implements ActionListener {
             if (level < maxLevel) {
                 level++;
                 loadGame(level);
+                this.levelLabel.setText("Level: " + level); // Atualiza o texto do nível
             } else {
                 JOptionPane.showMessageDialog(null, "Parabéns, você venceu o jogo!");
                 System.exit(0);
             }
         }
         tabuleiro.atualizaVisualizacao();
+        // Atualiza o score
+        scoreLabel.setText("Score: " + score);
     }
 
     // ----------------
@@ -152,4 +183,9 @@ public class App extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
+
+    public static void addScore(int scoreToAdd) {
+        score += scoreToAdd;
+    }
+
 }

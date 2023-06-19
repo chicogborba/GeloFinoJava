@@ -70,7 +70,8 @@ public class Personagem extends ElementoBasico {
         // Verifica se tem algum elemento de interesse na nova posicao
         // e interage de acordo
         ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
-        if (!(elemento instanceof Fundo) && !(elemento instanceof Ice)&& !(elemento instanceof HardIce) && !(elemento instanceof Coin) &&!(elemento instanceof Key) && !(elemento instanceof Padlock))  {
+        if (!(elemento instanceof Fundo) && !(elemento instanceof Ice) && !(elemento instanceof HardIce)
+                && !(elemento instanceof Coin) && !(elemento instanceof Key) && !(elemento instanceof Padlock)) {
             elemento.acao(this);
             moveFunction.apply(null);
             this.anterior = getTabuleiro().insereElemento(this);
@@ -80,27 +81,22 @@ public class Personagem extends ElementoBasico {
         } else if (elemento instanceof HardIce) {
             elemento.acao(this);
             this.anterior = getTabuleiro().insereElemento(this);
-        }
-        else if (elemento instanceof Coin) {
+        } else if (elemento instanceof Coin) {
             elemento.acao(this);
             this.anterior = getTabuleiro().insereElemento(this);
-        }
-         else if (elemento instanceof Key) {
+        } else if (elemento instanceof Key) {
             hasTheKey = true;
             elemento.acao(this);
             this.anterior = getTabuleiro().insereElemento(this);
-        }
-        else if (elemento instanceof Padlock) {
-            if(hasTheKey == true) {
-            elemento.acao(this);
-            this.anterior = getTabuleiro().insereElemento(this);
+        } else if (elemento instanceof Padlock) {
+            if (hasTheKey == true) {
+                elemento.acao(this);
+                this.anterior = getTabuleiro().insereElemento(this);
+            } else {
+                moveFunction.apply(null);
+                this.anterior = getTabuleiro().insereElemento(this);
             }
-            else {
-            moveFunction.apply(null);
-            this.anterior = getTabuleiro().insereElemento(this);
-            }
-        }
-        else {
+        } else {
             this.anterior = getTabuleiro().insereElemento(this);
         }
     }
