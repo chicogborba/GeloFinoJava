@@ -101,6 +101,26 @@ public class Personagem extends ElementoBasico {
         }
     }
 
+    public boolean isMovable() {
+        // Verifica se o jogador consegue se mover para cima pra baixo ou pros lados e
+        // caso estaja preso retorna false
+        ElementoBasico elementoCima = getTabuleiro().getElementoNaPosicao(this.getLin() - 1, this.getCol());
+        ElementoBasico elementoBaixo = getTabuleiro().getElementoNaPosicao(this.getLin() + 1, this.getCol());
+        ElementoBasico elementoEsquerda = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol() - 1);
+        ElementoBasico elementoDireita = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol() + 1);
+
+        if (elementoCima instanceof Wall || elementoCima instanceof Water) {
+            if (elementoBaixo instanceof Wall || elementoBaixo instanceof Water) {
+                if (elementoEsquerda instanceof Wall || elementoEsquerda instanceof Water) {
+                    if (elementoDireita instanceof Wall || elementoDireita instanceof Water) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public void acao(ElementoBasico outro) {
         throw new UnsupportedOperationException("Unimplemented method 'acao'");

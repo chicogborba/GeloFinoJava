@@ -157,6 +157,12 @@ public class App extends JFrame implements ActionListener {
                 System.exit(0);
             }
         }
+        // Verifica se é possivel mover o personagem
+        // Se não for, reinicia o level
+        if (!personagem.isMovable()) {
+            JOptionPane.showMessageDialog(null, "Perdeu 😭! Reiniciando o level... ");
+            loadGame(level);
+        }
         tabuleiro.atualizaVisualizacao();
         // Atualiza o score
         scoreLabel.setText("Score: " + score);
