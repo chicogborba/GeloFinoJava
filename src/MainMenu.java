@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Insets;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -22,6 +23,7 @@ public class MainMenu extends JPanel {
   }
 
   private void initializeUI() {
+    startButton.setMargin(new Insets(15, 0, 0, 0));
     this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
     // Adicionando imagem de fundo do menu principal
@@ -37,7 +39,7 @@ public class MainMenu extends JPanel {
           g.drawImage(logo, x, y, null);
         }
       };
-      logoPanel.setPreferredSize(new Dimension(730, 667));
+      logoPanel.setPreferredSize(new Dimension(630, 567));
       this.add(logoPanel);
       logoPanel.setBackground(new Color(217, 241, 255));
       logoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0)); // Alinhamento centralizado

@@ -19,7 +19,7 @@ public abstract class ElementoBasico extends JButton {
         this.tabuleiro = tabuleiro;
 
         this.imagem = Tabuleiro.createImageIcon(iconPath);
-        this.setIcon(resize(this.imagem, 38, 38));
+        this.setIcon(this.imagem);
         // prevent the button from being focused
         this.setFocusPainted(false);
         // prevent the button from being highlighted
@@ -43,7 +43,7 @@ public abstract class ElementoBasico extends JButton {
     public void setImage(ImageIcon imagem) {
         this.imagem = imagem;
         // this.setIcon(imagem);
-        this.setIcon(resize(this.imagem, 38, 38));
+        this.setIcon(this.imagem);
     }
 
     public String getId() {

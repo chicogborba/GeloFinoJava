@@ -25,7 +25,7 @@ public class App extends JFrame implements ActionListener {
     private JLabel levelLabel = new JLabel("Level: " + level);
     private JLabel scoreLabel = new JLabel("Score: 0");
     private static int score = 0;
-    private int maxLevel = 8;
+    private int maxLevel = 10;
 
     public App() {
         super();
@@ -100,7 +100,7 @@ public class App extends JFrame implements ActionListener {
         layers.setPreferredSize(new Dimension(1152, 720));
 
         gamebackground.setBounds(0, 0, 1152, 720);
-        painelJogo.setBounds(210, 28, 700, 700);
+        painelJogo.setBounds(215, 32, 700, 700);
 
         layers.add(gamebackground, 1);
         layers.add(painelJogo, 0);
@@ -127,12 +127,14 @@ public class App extends JFrame implements ActionListener {
                 // bordas brancas dos botões
                 App.this.pack();
                 // print app width and height
+                System.out.println(App.this.getWidth());
+                System.out.println(App.this.getHeight());
             }
         });
 
         // Colocando um tamanho fixo inicial para a tela para que o menu fique do
         // mesmo tamanho que o tabuleiro
-        this.setSize(855, 800);
+        this.setSize(1152, 748);
         this.setResizable(false);
 
         // Exibe a tela
@@ -200,8 +202,12 @@ public class App extends JFrame implements ActionListener {
         // Verifica se é possivel mover o personagem
         // Se não for, reinicia o level
         if (!personagem.isMovable()) {
-            JOptionPane.showMessageDialog(null, "Perdeu 😭! Reiniciando o level... ");
+            JOptionPane.showMessageDialog(null, "Perdeu 😭! Reiniciando o jogo... ");
+            level = 1;
+            score = 0;
             loadGame(level);
+            this.levelLabel.setText("Level: " + level); // Atualiza o texto do nível
+
         }
         tabuleiro.atualizaVisualizacao();
         // Atualiza o score

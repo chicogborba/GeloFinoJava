@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Tabuleiro extends JPanel {
@@ -18,6 +20,7 @@ public class Tabuleiro extends JPanel {
 
     public Tabuleiro() {
         super();
+        this.setBackground(new Color(217, 241, 255));
         // Cria o conjunto de células vazia e as insere no layout
         celulas = new ElementoBasico[MAXLIN][MAXCOL];
         this.setLayout(new GridLayout(MAXLIN, MAXCOL));
@@ -30,16 +33,32 @@ public class Tabuleiro extends JPanel {
         }
     }
 
-    public static ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = App.class.getResource("imagens/" + path);
+    private static final int Altura = 38;
+    private static final int Largura = 38;
+    private static Map<String, ImageIcon> proxi = new HashMap<>();
 
+    public static ImageIcon createImageIcon(String path) {
+        if (proxi.containsKey(path)) {
+            return proxi.get(path);
+        }
+
+        java.net.URL imgURL = App.class.getResource("imagens/" + path);
         if (imgURL != null) {
-            return new ImageIcon(imgURL);
+            ImageIcon aux = new ImageIcon(imgURL);
+            aux = Tabuleiro.resize(aux, Altura, Largura);
+            proxi.put(path, aux);
+            return aux;
         } else {
             System.err.println("Couldn't find file: " + path);
             System.exit(0);
             return null;
         }
+    }
+
+    public static ImageIcon resize(ImageIcon src, int destWidth,
+            int destHeight) {
+        return new ImageIcon(src.getImage().getScaledInstance(destWidth,
+                destHeight, Image.SCALE_SMOOTH));
     }
 
     public static int getMaxlin() {
@@ -141,23 +160,23 @@ public class Tabuleiro extends JPanel {
                 return new Ice("Gelo", lin, col, this);
             case '-':
                 return new Wall("Parede", lin, col, this);
-            case  '!': 
+            case '!':
                 return new HardIce("GeloDuro", lin, col, this);
             case '+':
                 return new FinalTile("Final", "FinalTile.jpeg", lin, col, this);
-            case 'f': 
-                return new  Coin("Moeda", lin, col, this);
-             case 'k': 
-                return new  Key("Chave", lin, col, this);
-            case 'p': 
-                return new  Padlock("Cadeado", lin, col, this);
+            case 'f':
+                return new Coin("Moeda", lin, col, this);
+            case 'k':
+                return new Key("Chave", lin, col, this);
+            case 'p':
+                return new Padlock("Cadeado", lin, col, this);
             case '*': {
                 ElementoBasico anterior = new Fundo("Fundo", lin, col, this);
                 principal = new Personagem("Puffle", "Personagem.jpeg", lin, col, this);
                 principal.setAnterior(anterior);
                 return principal;
             }
-          
+
             default:
                 throw new IllegalArgumentException("Personagem invalido: " + elem);
         }
