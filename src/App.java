@@ -25,7 +25,7 @@ public class App extends JFrame implements ActionListener {
     private JLabel levelLabel = new JLabel("Level: " + level);
     private JLabel scoreLabel = new JLabel("Score: 0");
     private static int score = 0;
-    private int maxLevel = 10;
+    private int maxLevel = 11;
 
     public App() {
         super();

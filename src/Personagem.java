@@ -71,7 +71,8 @@ public class Personagem extends ElementoBasico {
         // e interage de acordo
         ElementoBasico elemento = getTabuleiro().getElementoNaPosicao(this.getLin(), this.getCol());
         if (!(elemento instanceof Fundo) && !(elemento instanceof Ice) && !(elemento instanceof HardIce)
-                && !(elemento instanceof Coin) && !(elemento instanceof Key) && !(elemento instanceof Padlock)) {
+                && !(elemento instanceof Coin) && !(elemento instanceof Key) && !(elemento instanceof Padlock)
+                && !(elemento instanceof Teleport)) {
             elemento.acao(this);
             moveFunction.apply(null);
             this.anterior = getTabuleiro().insereElemento(this);
@@ -88,6 +89,10 @@ public class Personagem extends ElementoBasico {
             hasTheKey = true;
             elemento.acao(this);
             this.anterior = getTabuleiro().insereElemento(this);
+        } else if (elemento instanceof Teleport) {
+            elemento.acao(this);
+            this.anterior = getTabuleiro().insereElemento(this);
+
         } else if (elemento instanceof Padlock) {
             if (hasTheKey == true) {
                 elemento.acao(this);

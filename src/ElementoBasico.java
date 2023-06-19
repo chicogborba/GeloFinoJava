@@ -86,6 +86,14 @@ public abstract class ElementoBasico extends JButton {
         return tabuleiro;
     }
 
+    public void setLin(int lin) {
+        this.lin = lin;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
     public abstract void acao(ElementoBasico outro);
 
     public static ImageIcon resize(ImageIcon src, int destWidth,

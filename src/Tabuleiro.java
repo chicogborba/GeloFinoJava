@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -170,6 +171,8 @@ public class Tabuleiro extends JPanel {
                 return new Key("Chave", lin, col, this);
             case 'p':
                 return new Padlock("Cadeado", lin, col, this);
+            case 't':
+                return new Teleport("Teleport", lin, col, this);
             case '*': {
                 ElementoBasico anterior = new Fundo("Fundo", lin, col, this);
                 principal = new Personagem("Puffle", "Personagem.jpeg", lin, col, this);
@@ -185,5 +188,15 @@ public class Tabuleiro extends JPanel {
 
     public Personagem getPrincipal() {
         return principal;
+    }
+
+    public java.util.List<ElementoBasico> getListaElementos() {
+        java.util.List<ElementoBasico> lista = new ArrayList<>();
+        for (int i = 0; i < MAXLIN; i++) {
+            for (int j = 0; j < MAXCOL; j++) {
+                lista.add(celulas[i][j]);
+            }
+        }
+        return lista;
     }
 }
