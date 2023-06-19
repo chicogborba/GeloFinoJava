@@ -2,10 +2,12 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -13,6 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 public class App extends JFrame implements ActionListener {
     private Tabuleiro tabuleiro;
@@ -22,7 +25,7 @@ public class App extends JFrame implements ActionListener {
     private JLabel levelLabel = new JLabel("Level: " + level);
     private JLabel scoreLabel = new JLabel("Score: 0");
     private static int score = 0;
-    private int maxLevel = 6;
+    private int maxLevel = 8;
 
     public App() {
         super();
@@ -40,30 +43,67 @@ public class App extends JFrame implements ActionListener {
         header.setPreferredSize(new Dimension(855, 50));
 
         // Adicionando espaçamento interno nas laterais
-        int padding = 15;
-        header.setBorder(new EmptyBorder(padding, padding, padding, padding));
+        header.setBorder(new EmptyBorder(0, 15, 0, 15));
 
         levelLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        levelLabel.setForeground(new Color(0, 0, 0));
+        levelLabel.setForeground(new Color(28, 106, 169));
         header.add(levelLabel);
 
         header.add(Box.createHorizontalGlue());
 
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        scoreLabel.setForeground(new Color(0, 0, 0));
+        scoreLabel.setForeground(new Color(28, 106, 169));
+
         header.add(scoreLabel);
 
         // Cria os botões de movimento e adiciona o action listener
         MoveButtons moveButtons = new MoveButtons();
         moveButtons.createButtons(this);
 
+        JPanel gamebackground = new JPanel();
+        try {
+            Image logo = ImageIO.read(App.class.getResource("imagens/arcade.jpeg"));
+            JPanel logoPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    // Dividindo a largura e altura por 2 para centralizar a imagem
+                    int x = (getWidth() - logo.getWidth(null)) / 2;
+                    int y = (getHeight() - logo.getHeight(null)) / 2;
+                    g.drawImage(logo, x, y, null);
+                }
+            };
+            logoPanel.setPreferredSize(new Dimension(730, 667));
+            logoPanel.setOpaque(false);
+            logoPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0)); // Alinhamento centralizado
+
+            gamebackground.setLayout(new BorderLayout());
+            gamebackground.add(logoPanel, BorderLayout.CENTER);
+
+            // Adicione outros componentes ao painel gamebackground conforme necessário
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // Cria o painel do jogo onde ficara o tabuleiro e os botões de movimento
         JPanel painelJogo = new JPanel();
-        painelJogo.setBackground(new Color(217, 241, 255));
+        painelJogo.setPreferredSize(painelJogo.getPreferredSize());
+        painelJogo.setOpaque(false);
         painelJogo.setLayout(new BoxLayout(painelJogo, BoxLayout.PAGE_AXIS));
         painelJogo.add(header);
         painelJogo.add(tabuleiro);
         painelJogo.add(moveButtons);
+
+        // Criando camadas para que o tabuleiro fique sobrepondo do background
+        JLayeredPane layers = new JLayeredPane();
+        layers.setPreferredSize(new Dimension(1152, 720));
+
+        gamebackground.setBounds(0, 0, 1152, 720);
+        painelJogo.setBounds(210, 28, 700, 700);
+
+        layers.add(gamebackground, 1);
+        layers.add(painelJogo, 0);
 
         // Carrega o jogo pela primeira vez com o atributo level
         loadGame(level);
@@ -72,16 +112,16 @@ public class App extends JFrame implements ActionListener {
         // enquanto o jogo fica invisível até o botão de iniciar ser clicado
         this.setLayout(new BorderLayout());
         mainMenu = new MainMenu();
-        painelJogo.setVisible(false);
+        layers.setVisible(false);
         mainMenu.setVisible(true);
-        this.add(painelJogo, BorderLayout.CENTER);
+        this.add(layers, BorderLayout.CENTER);
         this.add(mainMenu, BorderLayout.NORTH);
         mainMenu.getStartButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Quando o botão de iniciar for clicado, o menu some e o jogo aparece
                 mainMenu.setVisible(false);
-                painelJogo.setVisible(true);
+                layers.setVisible(true);
                 tabuleiro.atualizaVisualizacao();
                 // Deixa o app com o menor tamanho possível para evitar as
                 // bordas brancas dos botões
